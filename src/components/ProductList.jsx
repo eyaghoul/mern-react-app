@@ -1,36 +1,36 @@
 
 import { useDispatch } from 'react-redux';
 import { addItem } from '../redux/cartSlice';
-
+import { showToast } from '../redux/uiSlice';
 // Liste des produits
 const PRODUCTS = [
   {
     id: 1,
-    name: 'Ecran UltraWide 4K 34"',
+    name: 'Écran UltraWide 4K 34"',
     price: 850,
-    category: 'Affichage',
-    icon: '[ Ecran ]'
+    category: 'AFFICHAGE',
+    icon: '🖥️'
   },
   {
     id: 2,
-    name: 'Clavier Mecanique RGB',
+    name: 'Clavier Mécanique RGB',
     price: 180,
-    category: 'Peripherique',
-    icon: '[ Clavier ]'
+    category: 'PÉRIPHÉRIQUE',
+    icon: '⌨️'
   },
   {
     id: 3,
     name: 'Souris Sans Fil Ergonomique',
     price: 95,
-    category: 'Accessoire',
-    icon: '[ Souris ]'
+    category: 'ACCESSOIRE',
+    icon: '🖱️'
   },
   {
     id: 4,
-    name: 'Casque Haute Fidelite ANC',
+    name: 'Casque Haute Fidélité ANC',
     price: 320,
-    category: 'Audio',
-    icon: '[ Audio ]'
+    category: 'AUDIO',
+    icon: '🎧'
   }
 ];
 
@@ -41,13 +41,10 @@ export default function ProductList() {
   return (
     <div className="product-section">
 
-      <div className="section-title-box">
-        <h3>Catalogue Produits</h3>
-
-        <p className="subtitle-hint">
-          Chaque clic déclenche une action via dispatch(addItem(p)).
-        </p>
-      </div>
+      <p className="subtitle-hint">
+        Chaque clic sur le bouton déclenche une action via{' '}
+        <strong>dispatch(addItem(produit)).</strong>
+      </p>
 
       <div className="product-grid">
 
@@ -56,6 +53,7 @@ export default function ProductList() {
           <div key={product.id} className="product-card">
 
             <div className="card-top">
+
               <span className="product-icon">
                 {product.icon}
               </span>
@@ -63,11 +61,12 @@ export default function ProductList() {
               <span className="product-category">
                 {product.category}
               </span>
+
             </div>
 
-            <h4 className="product-title">
+            <h3 className="product-title">
               {product.name}
-            </h4>
+            </h3>
 
             <div className="card-bottom">
 
@@ -76,13 +75,17 @@ export default function ProductList() {
               </span>
 
               <button
-                className="btn btn-add"
-                onClick={() => dispatch(addItem(product))}
+                className="add-btn"
+                onClick={() => {
+                  dispatch(addItem(product));
+                  dispatch(showToast(`${product.name} ajouté au panier !`));
+                }}
               >
                 + Ajouter
               </button>
 
             </div>
+
           </div>
 
         ))}

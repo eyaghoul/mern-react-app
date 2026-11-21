@@ -1,34 +1,52 @@
-import React, { useState } from 'react';
-import Header from './components/Header';
-import Counter from './components/Counter';
-import AutoTimer from './components/AutoTimer';
 
-export default function App() {
-  const [showTimer, setShowTimer] = useState(true);
+import './App.css';
+
+import Header from './components/Header';
+import Navbar from './components/Navbar';
+import ProductList from './components/ProductList';
+import Cart from './components/Cart';
+import { useTheme } from './context/ThemeContext';
+import NotificationToast from './components/NotificationToast';
+function App() {
+  const { theme } = useTheme();
 
   return (
-    <div className="app-container">
-      {/* 1. Composant type recevant des props */}
+    <div className={`app ${theme}`}>
+
+      {/* Barre de navigation */}
+      <Navbar />
+      <NotificationToast />
+      {/* Titre de la page */}
       <Header
-        titre="Mon Super Compteur React"
-        sousTitre="Séance 5 : Maîtrise fondamentale des Hooks useState et useEffect"
+        titre="État Global : useContext & Redux Toolkit"
+        sousTitre="Séance 6 : Coexistence d'un état applicatif léger (Thème géré par Context) et d'un état métier transactionnel (Panier géré par Redux Toolkit)."
       />
 
-      {/* 2. Composant Compteur avec état et persistance */}
-      <Counter />
+      {/* Contenu principal */}
+      <main className="main-content">
 
-      {/* 3. Bouton pour monter / démonter le timer (tester le cleanup de useEffect) */}
-      <div style={{ textAlign: 'center', marginTop: '16px' }}>
-        <button
-          className="btn btn-reset"
-          style={{ fontSize: '0.85rem', padding: '6px 12px' }}
-          onClick={() => setShowTimer(!showTimer)}
-        >
-          {showTimer ? 'Masquer le Chronomètre' : 'Afficher le Chronomètre'}
-        </button>
-      </div>
+        {/* Catalogue des produits */}
+        <section className="panel">
+          <h2 className="panel-title">
+            📦 Catalogue Produits
+          </h2>
 
-      {showTimer && <AutoTimer />}
+          <ProductList />
+        </section>
+
+        {/* Panier Redux */}
+        <section className="panel cart-panel">
+          <h2 className="panel-title">
+            🛒 Mon Panier Redux
+          </h2>
+
+          <Cart />
+        </section>
+
+      </main>
+
     </div>
   );
 }
+
+export default App;

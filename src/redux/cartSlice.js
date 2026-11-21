@@ -1,10 +1,14 @@
 
 import { createSlice } from '@reduxjs/toolkit';
 
+const savedItems = JSON.parse(
+  localStorage.getItem('techstore_cart') || '[]'
+);
 const initialState = {
-  items: [], // Tableau d'articles
-  totalCount: 0, // Nombre total d'articles
-  totalPrice: 0 // Montant total en DT
+  items: savedItems, // Tableau d'articles
+  totalCount: savedItems.reduce((sum, item) => sum + item.quantity, 0), // Nombre total d'articles
+  totalPrice: savedItems.reduce((sum, item) => sum + item.price * item.quantity, 0), // Montant total en DT
+  discountPercent: 0
 };
 
 // Fonction utilitaire de recalcul automatique
@@ -17,6 +21,10 @@ const recalculateTotals = (state) => {
   state.totalPrice = state.items.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
+  );
+  localStorage.setItem(
+    'techstore_cart',
+    JSON.stringify(state.items)
   );
 };
 
@@ -68,7 +76,16 @@ export const cartSlice = createSlice({
       state.items = [];
       state.totalCount = 0;
       state.totalPrice = 0;
-    }
+      state.discountPercent = 0;
+      localStorage.setItem('techstore_cart', JSON.stringify([]));
+    },
+    applyPromoCode: (state, action) => {
+  if (action.payload === 'POLY2027') {
+    state.discountPercent = 20;
+  } else {
+    state.discountPercent = 0;
+  }
+},
   }
 });
 
@@ -76,7 +93,8 @@ export const cartSlice = createSlice({
 export const {
   addItem,
   removeItem,
-  clearCart
+  clearCart,
+  applyPromoCode
 } = cartSlice.actions;
 
 // Export du reducer
